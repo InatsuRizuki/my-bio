@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rzin . 2812 | Bio</title>
+
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --card-bg: rgba(16, 16, 22, 0.65);
+        --border-color: rgba(255, 255, 255, 0.1);
+        --accent: #ffffff;
+        --text-main: #f4f4f6;
+        --text-muted: #9ca3af;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+      }
+
+      body {
+        background-color: #000;
+        color: var(--text-main);
+        font-family: "Outfit", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        cursor: none !important; /* Ẩn con trỏ chuột mặc định */
+      }
+
+      /* ================= CUSTOM CURSOR (VÒNG TRÒN NHỎ + DẤU CHẤM PHÁT QUANG) ================= */
+      .custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border: 1.5px solid rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.2s ease,
+          height 0.2s ease,
+          border-color 0.2s ease,
+          background-color 0.2s ease;
+        z-index: 10000;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+        animation: cursorPulse 2s infinite ease-in-out;
+      }
+
+      /* Dấu chấm trắng phát quang ở giữa */
+      .custom-cursor::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 3.5px;
+        height: 3.5px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        box-shadow:
+          0 0 8px #ffffff,
+          0 0 12px rgba(255, 255, 255, 0.8);
+      }
+
+      @keyframes cursorPulse {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          border-color: rgba(255, 255, 255, 0.75);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.1);
+          border-color: rgba(255, 255, 255, 1);
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        }
+      }
+
+      .custom-cursor.hovered {
+        width: 38px;
+        height: 38px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: #ffffff;
+      }
+
+      /* ================= NỀN VIDEO TỰ ĐỘNG LẶP LẠI ================= */
+      .bg-video {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+
+      .bg-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 7, 0.7);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      #particles-canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* ================= MÀN HÌNH CHỜ (ENTER OVERLAY) ================= */
+      #enter-screen {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 7, 0.96);
+        backdrop-filter: blur(18px);
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: none !important;
+        transition:
+          opacity 0.7s ease,
+          visibility 0.7s ease;
+      }
+
+      #enter-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .intro-gif-box {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 30px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 35px rgba(255, 255, 255, 0.15);
+      }
+
+      .intro-gif-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .enter-text {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #fff;
+        text-shadow:
+          0 0 12px rgba(255, 255, 255, 0.8),
+          0 0 25px rgba(255, 255, 255, 0.4);
+        animation: pulseText 2s infinite ease-in-out;
+      }
+
+      @keyframes pulseText {
+        0%,
+        100% {
+          opacity: 0.75;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.03);
+        }
+      }
+
+      /* ================= THẺ PROFILE CHÍNH ================= */
+      main {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 430px;
+        padding: 20px;
+        perspective: 1000px;
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+        transition:
+          opacity 0.8s ease 0.2s,
+          transform 0.8s ease 0.2s;
+      }
+
+      main.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .profile-card {
+        position: relative;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.75),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform-style: preserve-3d;
+        transition: transform 0.1s ease-out;
+        overflow: hidden;
+      }
+
+      .card-glare {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+      }
+
+      .top-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+      }
+
+      .meta-badge {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 4px 10px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .avatar-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+
+      .avatar-wrapper {
+        position: relative;
+        width: 108px;
+        height: 108px;
+      }
+
+      .avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.12);
+      }
+
+      .status-dot {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 18px;
+        height: 18px;
+        background: #23a55a;
+        border: 3px solid #121217;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #23a55a;
+      }
+
+      .user-info {
+        text-align: center;
+        margin-bottom: 22px;
+      }
+
+      .display-name {
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        color: #fff;
+        text-shadow: 0 0 18px rgba(255, 255, 255, 0.35);
+        margin-bottom: 4px;
+      }
+
+      .username {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+
+      .divider {
+        height: 1px;
+        width: 60%;
+        margin: 0 auto 12px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.15),
+          transparent
+        );
+      }
+
+      .bio-typewriter {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        color: #d1d5db;
+        min-height: 22px;
+      }
+
+      .cursor-blink {
+        display: inline-block;
+        width: 2px;
+        height: 14px;
+        background: #fff;
+        margin-left: 3px;
+        vertical-align: middle;
+        animation: blink 0.8s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .social-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        cursor: none !important;
+        transition: all 0.25s ease;
+      }
+
+      .social-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+      }
+
+      /* Thẻ Spotify / Trình phát nhạc Playlist */
+      .spotify-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 12px;
+        cursor: none !important;
+        transition: background 0.25s ease;
+      }
+
+      .spotify-card:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .album-art {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .track-details {
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .spotify-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #1db954;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 3px;
+      }
+
+      .track-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .track-artist {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Nút chuyển bài tiếp theo */
+      .next-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: none !important;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .next-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+
+      .equalizer {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 18px;
+        padding-right: 4px;
+      }
+
+      .equalizer i {
+        display: block;
+        width: 3px;
+        height: 6px;
+        background: #1db954;
+        border-radius: 2px;
+        animation: eqBounce 0.9s infinite ease-in-out;
+      }
+
+      .equalizer.paused i {
+        animation-play-state: paused;
+        height: 4px;
+      }
+
+      .equalizer i:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .equalizer i:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .equalizer i:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      .equalizer i:nth-child(4) {
+        animation-delay: 0.1s;
+      }
+
+      @keyframes eqBounce {
+        0%,
+        100% {
+          height: 5px;
+        }
+        50% {
+          height: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- VÒNG TRÒN CON TRỎ CHUỘT -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <!-- NỀN VIDEO TỪ MÁY -->
+    <video class="bg-video" autoplay muted loop playsinline>
+      <source src="guns.lol - Customize.mp4" type="video/mp4" />
+      Trình duyệt của bạn không hỗ trợ thẻ video.
+    </video>
+
+    <div class="bg-overlay"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Màn hình chờ -->
+    <div id="enter-screen" role="button" aria-label="Nhấn để mở Bio">
+      <div class="intro-gif-box">
+        <img
+          src="b44c8f8d-d20c-41c4-9770-a9215bf971e0.jpg"
+          alt="Intro GIF"
+          draggable="false"
+        />
+      </div>
+      <p class="enter-text">[ Rinz ]</p>
+    </div>
+
+    <!-- Audio phát nhạc ẩn -->
+    <audio id="bg-music" preload="auto"></audio>
+
+    <!-- Nội dung chính -->
+    <main id="main-content">
+      <div class="profile-card" id="tilt-card">
+        <div class="card-glare"></div>
+
+        <div class="top-meta">
+          <span class="meta-badge">UID: IDK</span>
+          <span class="meta-badge"
+            ><i class="fa-solid fa-eye"></i> 28122010</span
+          >
+        </div>
+
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <img
+              class="avatar-img"
+              src="4b8f0020918f240ff0607a81ba40d853.jpg"
+              alt="Avatar"
+            />
+            <span class="status-dot" title="Online"></span>
+          </div>
+        </div>
+
+        <div class="user-info">
+          <h1 class="display-name">rzin.</h1>
+          <p class="username">@rinz101</p>
+          <div class="divider"></div>
+          <p class="bio-typewriter">
+            <span id="typewriter-text"></span><span class="cursor-blink"></span>
+          </p>
+        </div>
+
+        <div class="social-links">
+          <a
+            class="social-btn"
+            aria-label="Tiktok"
+            href="https://www.tiktok.com/@rizuki.inatsu"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fa-brands fa-tiktok"></i>
+          </a>
+          <a
+            class="social-btn"
+            aria-label="Facebook"
+            href="https://www.facebook.com/rzin101/"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a
+            class="social-btn"
+            aria-label="Instagram"
+            href="https://www.instagram.com/nth28_12/"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+        </div>
+
+        <!-- Thẻ Spotify Playlist Player -->
+        <div
+          class="spotify-card"
+          id="music-toggle"
+          title="Nhấn để tạm dừng / phát nhạc"
+        >
+          <img
+            class="album-art"
+            id="album-art"
+            src="Bia_đĩa_HVL_của_RPT_MCK.png"
+            alt="Album art"
+          />
+          <div class="track-details">
+            <div class="spotify-status">
+              <i class="fa-brands fa-spotify"></i>
+              <span>Listening to Spotify</span>
+            </div>
+            <div class="track-title" id="track-title">Mắt Môi Tay Chân</div>
+            <div class="track-artist" id="track-artist">MCK ft.Tage</div>
+          </div>
+          <div class="equalizer" id="eq-bars" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+          <!-- Nút chuyển bài -->
+          <button class="next-btn" id="next-btn" title="Bài tiếp theo">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ================= CUSTOM CURSOR LOGIC =================
+      const cursor = document.getElementById("custom-cursor");
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function updateCursor() {
+        cursorX += (mouseX - cursorX) * 0.25;
+        cursorY += (mouseY - cursorY) * 0.25;
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
+        requestAnimationFrame(updateCursor);
+      }
+      updateCursor();
+
+      const interactiveElements = document.querySelectorAll(
+        "a, button, .spotify-card, #enter-screen",
+      );
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursor.classList.add("hovered"),
+        );
+        el.addEventListener("mouseleave", () =>
+          cursor.classList.remove("hovered"),
+        );
+      });
+
+      // ================= DANH SÁCH 4 BÀI NHẠC (PLAYLIST) =================
+      const playlist = [
+        {
+          title: "Mắt Môi Tay Chân",
+          artist: "MCK ft. Tage",
+          src: "Mắt Môi Tay Chân MCK ft.Tage.mp3",
+          art: "Bia_đĩa_HVL_của_RPT_MCK.png",
+        },
+        {
+          title: "Nếu Như Ta Chẳng Còn",
+          artist: "MCK",
+          src: "Nếu Như Ta Chẳng Còn - MCK (ft. A$AP Ướt Mi).mp3",
+          art: "b38a57a62706857a74ecfcb16eba28e9.1000x1000x1.png",
+        },
+        {
+          title: "Đánh Đổi",
+          artist: "Obito ft.MCK",
+          src: "Obito - Đánh Đổi ft. MCK.mp3",
+          art: "ab67616d0000b2730ecdf596e76b0403506c1375.jpg",
+        },
+        {
+          title: "Nhất Bái Thiên Địa",
+          artist: "The Flob ft.CHIN",
+          src: "NHẤT BÁI THIÊN ĐỊA  - The Flob ft. CHIN _ OFFICIAL LYRICS VIDEO.mp3",
+          art: "ab67616d0000b27366d9e65aa6e69b51756987ea.jpg",
+        },
+      ];
+
+      let currentTrackIndex = 0;
+      const bgMusic = document.getElementById("bg-music");
+      const eqBars = document.getElementById("eq-bars");
+      const musicToggle = document.getElementById("music-toggle");
+      const nextBtn = document.getElementById("next-btn");
+      const trackTitle = document.getElementById("track-title");
+      const trackArtist = document.getElementById("track-artist");
+      const albumArt = document.getElementById("album-art");
+
+      bgMusic.volume = 0.4;
+
+      function loadTrack(index) {
+        const track = playlist[index];
+        bgMusic.src = track.src;
+        trackTitle.textContent = track.title;
+        trackArtist.textContent = track.artist;
+        albumArt.src = track.art;
+        bgMusic.load();
+      }
+
+      loadTrack(currentTrackIndex);
+
+      const enterScreen = document.getElementById("enter-screen");
+      const mainContent = document.getElementById("main-content");
+
+      enterScreen.addEventListener("click", () => {
+        enterScreen.classList.add("hidden");
+        mainContent.classList.add("visible");
+        bgMusic
+          .play()
+          .then(() => {
+            eqBars.classList.remove("paused");
+          })
+          .catch(() => {
+            eqBars.classList.add("paused");
+          });
+      });
+
+      musicToggle.addEventListener("click", (e) => {
+        if (e.target.closest("#next-btn")) return;
+        if (bgMusic.paused) {
+          bgMusic.play();
+          eqBars.classList.remove("paused");
+        } else {
+          bgMusic.pause();
+          eqBars.classList.add("paused");
+        }
+      });
+
+      nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        bgMusic.play();
+        eqBars.classList.remove("paused");
+      });
+
+      bgMusic.addEventListener("ended", () => {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        bgMusic.play();
+      });
+
+      // 2. HIỆU ỨNG CHỮ CHẠY (TYPEWRITER)
+      const bioLines = [
+        "Welcome to my profile...",
+        "多添些爱，寻得内心的平静",
+        "少些绝望，方能领略生命的广阔与无垠。",
+      ];
+      let lineIdx = 0;
+      let charIdx = 0;
+      let isDeleting = false;
+      const typeTarget = document.getElementById("typewriter-text");
+
+      function typeLoop() {
+        const currentLine = bioLines[lineIdx];
+        if (!isDeleting) {
+          typeTarget.textContent = currentLine.substring(0, charIdx + 1);
+          charIdx++;
+          if (charIdx === currentLine.length) {
+            isDeleting = true;
+            setTimeout(typeLoop, 3000);
+            return;
+          }
+        } else {
+          typeTarget.textContent = currentLine.substring(0, charIdx - 1);
+          charIdx--;
+          if (charIdx === 0) {
+            isDeleting = false;
+            lineIdx = (lineIdx + 1) % bioLines.length;
+          }
+        }
+        setTimeout(typeLoop, isDeleting ? 40 : 85);
+      }
+      typeLoop();
+
+      // 3. HIỆU ỨNG XOAY 3D THEO CHUỘT
+      const card = document.getElementById("tilt-card");
+      document.addEventListener("mousemove", (e) => {
+        const xAxis = (e.clientX - window.innerWidth / 2) / 25;
+        const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      });
+
+      document.addEventListener("mouseleave", () => {
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+      });
+
+      // 4. HIỆU ỨNG HẠT BỤI NỀN (CANVAS)
+      const canvas = document.getElementById("particles-canvas");
+      const ctx = canvas.getContext("2d");
+      let particles = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      for (let i = 0; i < 65; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.8 + 0.5,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: Math.random() * 0.6 + 0.2,
+          alpha: Math.random() * 0.5 + 0.15,
+        });
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+          ctx.fill();
+
+          p.x += p.dx;
+          p.y += p.dy;
+
+          if (p.y > canvas.height) {
+            p.y = 0;
+            p.x = Math.random() * canvas.width;
+          }
+          if (p.x > canvas.width) p.x = 0;
+          if (p.x < 0) p.x = canvas.width;
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+    </script>
+  </body>
+</html>
